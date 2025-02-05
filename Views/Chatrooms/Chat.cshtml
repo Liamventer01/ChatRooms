@@ -1,0 +1,88 @@
+﻿@using ChatRooms.Helpers;
+@using ChatRooms.ViewModels;
+@model ChatroomChatViewModel
+
+@{
+    ViewData["Title"] = Model.ChatroomName + " Chat";
+}
+
+<link rel="stylesheet" href="~/css/chat.css" />
+
+<div class="text-center">
+    <h1 class="display-4">@Model.ChatroomName</h1>
+</div>
+
+<section style="background-color: #eee;">
+    <div class="container4">
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+
+                <div class="card" id="chat2">
+                    <div class="card-header d-flex justify-content-between align-items-center p-3">
+                        <h5 class="mb-0">Chat</h5>
+                        <a asp-area="" asp-controller="Chatrooms" asp-action="Index" id="leaveButton" class="btn btn-danger btn-sm" data-mdb-ripple-color="dark">
+                            Leave
+                        </a>
+                    </div>
+
+                    <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px; max-height: 600px; overflow-y: auto; word-wrap: break-word;">
+                            <div class="d-flex flex-row justify-content-start">
+                                <div>
+                                <ul id="messagesList" style="overflow-anchor: none; list-style: none; padding: 0;">
+                                    @foreach (Message message in Model.Messages)
+                                    {
+                                        var timeStamp = FormatTime.FormatTimeStamp(message.TimeStamp, DateTime.Now);
+                                        <li>
+                                            <div class="avatar-container">
+                                                <img src="@message.User?.ProfileImageUrl" alt="User Profile Picture" />
+                                            </div>
+                                            <div class="message-content" style="word-wrap: break-word">
+                                                <span class="user-name">@message.User?.UserName</span>
+                                                <span class="time-stamp">@timeStamp</span>
+                                                <br />
+                                                <div class="user-message" style="word-wrap: break-word">@Html.Raw(message.Content)</div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                                <div id="anchor" style="overflow-anchor: auto; height: 1px;"></div>
+                                   
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="card-footer text-muted d-flex justify-content-center align-items-center p-3">
+                            <form>
+                            <div class="form-group">
+                                <input type="hidden" id="chatroomName" name="ChatroomName" asp-for="@Model.ChatroomName" value="@Model.ChatroomName" />
+                                <input type="hidden" id="userId" name="UserId" asp-for="@Model.UserId" value="@Model.UserId" />
+                                <input type="hidden" id="msgLengthLimit" name="MsgLengthLimit" asp-for="@Model.MsgLengthLimit" value="@Model.MsgLengthLimit" />
+                                <textarea type="text" id="messageContent" name="MessageContent" asp-for="@Model.MessageContent" class="form-control form-control-lg w-100"
+                                          placeholder="Type message" contenteditable="true"></textarea>
+                                
+                                <span asp-validation-for="MessageContent" id="messageContentValidation" class="text-danger"></span>
+                            </div>
+                            <input type="button" id="sendButton" value="Send" class="btn btn-primary w-100" style="margin-top: 10px"/>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://cdn.tiny.cloud/1/e8fb1jx10pzftalouow7t23ce5ltbod7qbo3bs1yh228u43d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="~/js/tinymceInit.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+
+

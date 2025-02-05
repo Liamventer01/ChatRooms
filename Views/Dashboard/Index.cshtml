@@ -1,0 +1,191 @@
+﻿@using ChatRooms.ViewModels;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="text-left">
+    <h1 class="display-4">Dashboard</h1>
+</div>
+
+<div class="container2">
+    <div class="container">
+        <a type="button" class="btn btn-primary" asp-area="" asp-controller="Chatrooms" asp-action="Create">Create Chatroom</a>
+        <div class="row">
+            <!-- Owned Chatrooms Column -->
+            <div class="col-md-6">
+                <h2>Owned Chatrooms</h2>
+                <div class="container3">
+                    <div class="container">
+                        <form asp-action="Index" method="get">
+                            <div class="form-actions no-color">
+                                <p>
+                                    Find by name: <input type="text" name="SearchStringOwned" value="@ViewData["CurrentFilterOwned"]" />
+                                    <input type="submit" value="Search" class="btn btn-default" /> |
+                                    <a asp-action="Index">Back to Full List</a>
+                                </p>
+                            </div>
+                        </form>
+                        <div class="text-left" style="margin-bottom: 10px">
+                            <a asp-action="Index" class="btn btn-primary" asp-route-sortOrderOwned="@ViewData["NameSortParmOwned"]" asp-route-currentFilterOwned="@ViewData["CurrentFilterOwned"]">Sort by name</a>
+                        </div>
+                        <div class="col">
+                            @foreach (var item in Model.OwnedChatrooms)
+                            {
+                                <div class="col-md-4">
+                                    <div class="card mb-4 box-shadow">
+                                        @if (@item.ChatroomImageUrl != null)
+                                        {
+                                            <img class="card-img-top" src="@item.ChatroomImageUrl" alt="Chatroom Banner">
+                                        }
+                                        else
+                                        {
+                                            <img class="card-img-top" src="~/images/banner-placeholder.png" alt="Card image cap">
+                                        }
+
+                                        <div class="card-body">
+                                            <h2 class="text-left">@item.Name</h2>
+                                            <p class="card-text">@item.Description</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <a asp-controller="Chatrooms" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" style="color:white">Details</a>
+                                                    <a asp-controller="Chatrooms" asp-action="Chat" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" style="color:white">Join</a>
+                                                    @{
+                                                        if (Model.PinnedChatroomsQuery != null && Model.PinnedChatroomsQuery.Contains(item))
+                                                        {
+                                                            <a href="#" data-id="@item.Id" class="pinButton btn btn-sm btn-outline-secondary" style="color:white">Unpin</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="#" data-id="@item.Id" class="pinButton btn btn-sm btn-outline-secondary" style="color:white">Pin</a>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        @{
+                            var prevDisabledOwned = !Model.OwnedChatrooms.HasPreviousPage ? "disabled" : "";
+                            var nextDisabledOwned = !Model.OwnedChatrooms.HasNextPage ? "disabled" : "";
+                        }
+
+                        <a asp-action="Index"
+                           asp-route-sortOrderOwned="@ViewData["CurrentSortOwned"]"
+                           asp-route-pageNumberOwned="@(Model.OwnedChatrooms.PageIndex - 1)"
+                           asp-route-currentFilterOwned="@ViewData["CurrentFilterOwned"]"
+                           class="btn btn-default @prevDisabledOwned"
+                           style="margin-right: 4px">
+                            Previous
+                        </a>
+                        <a asp-action="Index"
+                           asp-route-sortOrderOwned="@ViewData["CurrentSortOwned"]"
+                           asp-route-pageNumberOwned="@(Model.OwnedChatrooms.PageIndex + 1)"
+                           asp-route-currentFilterOwned="@ViewData["CurrentFilterOwned"]"
+                           class="btn btn-default @nextDisabledOwned">
+                            Next
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Pinned Chatrooms Column -->
+            <div class="col-md-6">
+                <h2>Pinned Chatrooms</h2>
+                <div class="container3">
+                    <div class="container">
+                        <form asp-action="Index" method="get">
+                            <div class="form-actions no-color">
+                                <p>
+                                    Find by name: <input type="text" name="SearchStringPinned" value="@ViewData["CurrentFilterPinned"]" />
+                                    <input type="submit" value="Search" class="btn btn-default" /> |
+                                    <a asp-action="Index">Back to Full List</a>
+                                </p>
+                            </div>
+                        </form>
+
+                        <div class="text-left" style="margin-bottom: 10px">
+                            <a asp-action="Index" class="btn btn-primary" asp-route-sortOrderPinned="@ViewData["NameSortParmPinned"]" asp-route-currentFilterPinned="@ViewData["CurrentFilterPinned"]">Sort by name</a>
+                        </div>
+
+                        <div class="col">
+                            @foreach (var item in Model.PinnedChatrooms)
+                            {
+                                <div class="col-md-4">
+                                    <div class="card mb-4 box-shadow">
+                                        @if (@item.ChatroomImageUrl != null)
+                                        {
+                                            <img class="card-img-top" src="@item.ChatroomImageUrl" alt="Chatroom Banner">
+                                        }
+                                        else
+                                        {
+                                            <img class="card-img-top" src="~/images/banner-placeholder.png" alt="Card image cap">
+                                        }
+
+                                        <div class="card-body">
+                                            <h2 class="text-left">@item.Name</h2>
+                                            <p class="card-text">@item.Description</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <a asp-controller="Chatrooms" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" style="color:white">Details</a>
+                                                    <a asp-controller="Chatrooms" asp-action="Chat" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" style="color:white">Join</a>
+                                                    @{
+                                                        if (Model.PinnedChatroomsQuery != null && Model.PinnedChatroomsQuery.Contains(item))
+                                                        {
+                                                            <a href="#" data-id="@item.Id" class="pinButton btn btn-sm btn-outline-secondary" style="color:white">Unpin</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="#" data-id="@item.Id" class="pinButton btn btn-sm btn-outline-secondary" style="color:white">Pin</a>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        @{
+                            var prevDisabledPinned = !Model.PinnedChatrooms.HasPreviousPage ? "disabled" : "";
+                            var nextDisabledPinned = !Model.PinnedChatrooms.HasNextPage ? "disabled" : "";
+                        }
+
+                        <a asp-action="Index"
+                           asp-route-sortOrderPinned="@ViewData["CurrentSortPinned"]"
+                           asp-route-pageNumberPinned="@(Model.PinnedChatrooms.PageIndex - 1)"
+                           asp-route-currentFilterPinned="@ViewData["CurrentFilterPinned"]"
+                           class="btn btn-default @prevDisabledPinned"
+                            style="margin-right: 4px">
+                            Previous
+                        </a>
+                        <a asp-action="Index"
+                           asp-route-sortOrderPinned="@ViewData["CurrentSortPinned"]"
+                           asp-route-pageNumberPinned="@(Model.PinnedChatrooms.PageIndex + 1)"
+                           asp-route-currentFilterPinned="@ViewData["CurrentFilterPinned"]"
+                           class="btn btn-default @nextDisabledPinned">
+                            Next
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/pin.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/Chat-Rooms/providers/Microsoft.ServiceLinker/linkers/ChatRoomsContextProd_D3793E08AE",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/chat-rooms-db-server/databases/Chat-Rooms_db",
+      "type": "mssql.azure",
+      "connectionId": "ChatRoomsContextProd"
+    }
+  }
+}

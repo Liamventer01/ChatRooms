@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-left">
+    <h1 class="display-4" style="display: none">Home</h1>
+</div>
+
+<div class="text-left">
+    <h2 class="display-4">Welcome to ChatRooms</h2>
+    <p>ChatRooms is a real time chat service. You can join or create chatrooms about topics that interest you! All messages are sent and displayed in real time. Previous messages can be viewed and are stored in a database.</p>
+    <h2>Have fun chatting!</h2>
+    <p>Please <a asp-area="" asp-controller="Account" asp-action="Register">create an account</a> or <a asp-area="" asp-controller="Account" asp-action="Login">login</a> to continue.</p>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

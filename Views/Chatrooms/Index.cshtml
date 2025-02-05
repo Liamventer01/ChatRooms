@@ -1,0 +1,98 @@
+﻿@using ChatRooms.Helpers;
+@using ChatRooms.ViewModels;
+@model ChatroomIndexViewModel
+@{
+    ViewData["Title"] = "Chatrooms";
+}
+
+<div class="text-left">
+    <h1 class="display-4">Chatrooms</h1>
+</div>
+
+<div class="container2">
+    <div class="container">
+        <form asp-action="Index" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                    <input type="submit" value="Search" class="btn btn-default" /> |
+                    <a asp-action="Index">Back to Full List</a>
+                </p>
+            </div>
+        </form>
+
+        <div class="text-left" style="margin-bottom: 10px">
+            <a asp-action="Index" class="btn btn-primary" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Sort by name</a>
+        </div>
+        <div class="row">
+            @foreach (var item in Model.Chatrooms)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow">
+                        @if (@item.ChatroomImageUrl != null)
+                        {
+                            <img class="card-img-top" src="@item.ChatroomImageUrl" alt="Chatroom Thumbnail">
+                        }
+                        else
+                        {
+                            <img class="card-img-top" src="~/images/banner-placeholder.png" alt="Card image cap">
+                        }
+                        
+                        <div class="card-body">
+                            <h2 class="text-left">@item.Name</h2>
+                            <p class="card-text">@item.Description</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a asp-controller="Chatrooms" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" style="color:white">Details</a>
+                                    <a asp-controller="Chatrooms" asp-action="Chat" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" style="color:white">Join</a>
+                                    @{
+                                        if (Model.PinnedChatrooms != null && Model.PinnedChatrooms.Contains(item))
+                                        {
+                                            <a href="#" data-id="@item.Id" class="pinButton btn btn-sm btn-outline-secondary" style="color:white">Unpin</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" data-id="@item.Id" class="pinButton btn btn-sm btn-outline-secondary" style="color:white">Pin</a>
+                                        }
+                                    }
+                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @{
+            var prevDisabled = !Model.Chatrooms.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.Chatrooms.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="Index"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.Chatrooms.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-default @prevDisabled"
+            style="margin-right: 4px">
+            Previous
+        </a>
+        <a asp-action="Index"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.Chatrooms.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-default @nextDisabled">
+            Next
+        </a>
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/pin.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

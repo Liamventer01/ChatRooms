@@ -1,0 +1,9 @@
+﻿body {
+	color-scheme: dark;
+	word-wrap: break-word;
+}
+
+body.mceContentBody {
+		color-scheme: dark;
+		word-wrap: break-word;
+}
