@@ -1,5 +1,7 @@
 # ChatRooms ASP.NET Core MVC Web Application
 
+Use this User Name and password to login: user name: liam password: Liam!2024
+
 ## Full-stack web application created using ASP.NET CORE, .NET 7, C#, and MSSQL
 
 ChatRooms is a database-driven web application for real-time chatting. It was
